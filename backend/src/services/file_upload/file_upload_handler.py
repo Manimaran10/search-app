@@ -1,5 +1,5 @@
 import requests
-
+import re
 class FileSource:
     def load(self):
         """
@@ -12,7 +12,7 @@ class UploadedFileSource(FileSource):
         self.file = file
 
     def load(self):
-        return self.file.read(), self.file.filename
+        return self.file.read(), self.file.filename, None
 
 
 
@@ -25,32 +25,55 @@ class URLFileSource(FileSource):
         resp.raise_for_status()
 
         filename = self.url.split("/")[-1]
-        return resp.content, filename
-    
+        return resp.content, filename, self.url
 
-import requests
-import re
+
 
 class GoogleDriveFileSource(FileSource):
+
     def __init__(self, drive_url):
         self.drive_url = drive_url
 
     def load(self):
         file_id = self.extract_file_id(self.drive_url)
-        download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        url = "https://drive.google.com/uc?export=download"
+        
+        session = requests.Session()
+        response = session.get(url, params={"id": file_id}, stream=True)
 
-        resp = requests.get(download_url)
-        resp.raise_for_status()
+        # Handle confirmation token
+        token = self._get_confirm_token(response)
+        if token:
+            response = session.get(
+                url,
+                params={"id": file_id, "confirm": token},
+                stream=True
+            )
 
-        filename = file_id + ".download"
-        return resp.content, filename
+        file_bytes = response.content
+        filename = f"{file_id}.file"
+
+        return file_bytes, filename, self.drive_url
+
+    def _get_confirm_token(self, response):
+        for key, value in response.cookies.items():
+            if key.startswith("download_warning"):
+                return value
+        return None
 
     def extract_file_id(self, url):
-        match = re.search(r"/d/([A-Za-z0-9_-]+)", url)
-        if match:
-            return match.group(1)
-        raise ValueError("Invalid Google Drive URL")
+        patterns = [
+            r"/d/([a-zA-Z0-9_-]+)",                       
+            r"id=([a-zA-Z0-9_-]+)",                       
+            r"file/d/([a-zA-Z0-9_-]+)",                   
+        ]
 
+        for p in patterns:
+            match = re.search(p, url)
+            if match:
+                return match.group(1)
+
+        raise ValueError("Invalid Google Drive link")
 
 class LocalFileSource(FileSource):
     def __init__(self, path):
@@ -58,7 +81,7 @@ class LocalFileSource(FileSource):
 
     def load(self):
         with open(self.path, "rb") as f:
-            return f.read(), self.path.split("/")[-1]
+            return f.read(), self.path.split("/")[-1], None
 
 
 

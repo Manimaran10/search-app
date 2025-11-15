@@ -1,7 +1,7 @@
 import flask
 from flask import request, jsonify, render_template
-from backend.src.services.file_upload.file_upload_handler import file_source_factory
-
+from services.file_upload.file_upload_handler import file_source_factory
+from services.file_upload.file_processer import FileProcesser
 app = flask.Flask(__name__)
 
 
@@ -14,15 +14,25 @@ def status():
 def upload():
     try:
         source = file_source_factory(request)
-        file_bytes, filename = source.load()
-
-        with open(f"/tmp/{filename}", "wb") as f:
-            f.write(file_bytes)
-
-        return jsonify({"status": "success", "filename": filename})
+        file_bytes, filename, source_link = source.load()
+        file_processer = FileProcesser()
+        result = file_processer.process(file_bytes, filename)
+        
+        return jsonify({
+            "status": "success",
+            "filename": result["filename"],
+            "file_type": result["file_type"],
+            "extracted_text": result["raw_text"][:500],  # return first 500 chars
+            "categories": result["categories"],
+            "citation": source_link
+        })
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
+        print(f"Error processing file: {e}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
 
 
 @app.route('/app', methods=['GET'])
