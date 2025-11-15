@@ -3,15 +3,17 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 import pytesseract
 import io
-from services.categorization.topic_categorizer import TopicCategorizer
-from services.categorization.project_categorizer import ProjectCategorizer
-from services.categorization.team_categorizer import TeamCategorizer
+from services.indexer.indexer import TextIndexer
 class FileProcesser:
-    def process(self, file_bytes, filename) -> None:
-        file_type = self.detect_file_type(filename, file_bytes)
+
+    def __init__(self):
+        self.indexer = TextIndexer()
+
+    def process(self, file_bytes, source) -> None:
+        file_type = self.detect_file_type(source, file_bytes)
 
         result = {
-        "filename": filename,
+        "source": source,
         "file_type": file_type,
         "raw_text": None,
         }
@@ -25,24 +27,13 @@ class FileProcesser:
         else:
             result["raw_text"] = file_bytes.decode(errors="ignore")
 
-        def categorize_text(text):
-            topic_categorizer = TopicCategorizer()
-            project_categorizer = ProjectCategorizer()
-            team_categorizer = TeamCategorizer()
-            topic_result = topic_categorizer.categorize(text)
-            project_result = project_categorizer.categorize(text)
-            team_result = team_categorizer.categorize(text)
-            return {
-                "topic": topic_result,
-                "project": project_result,
-                "team": team_result
-            }
-        result["categories"] = categorize_text(result["raw_text"])
+        if not result["raw_text"]:
+            raise Exception("No text extracted from the file or invalid source")
+        index_response = self.indexer.process(result["raw_text"], source=source)
+        return index_response
 
-        return result
-
-    def detect_file_type(self,filename, file_bytes):
-        mime = mimetypes.guess_type(filename)[0]
+    def detect_file_type(self,source, file_bytes):
+        mime = mimetypes.guess_type(source)[0]
 
         if not mime:
             return "unknown"

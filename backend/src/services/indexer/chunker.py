@@ -94,7 +94,6 @@ class TextChunker:
         return chunks
 
     def chunk(self, text: str) -> List[Dict]:
-        """Main entry point."""
         text = self.clean_text(text)
 
         if not text:

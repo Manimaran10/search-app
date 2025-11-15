@@ -1,7 +1,7 @@
 
 from services.models.embedding_model import EmbeddingModel
 
-class TeamCategorizer:
+class TeamClassifier:
 
     def __init__(self):
         self.embedding_model = EmbeddingModel()

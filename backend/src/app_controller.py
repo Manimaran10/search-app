@@ -17,15 +17,12 @@ def upload():
         file_bytes, filename, source_link = source.load()
         file_processer = FileProcesser()
         result = file_processer.process(file_bytes, filename)
-        
+        if not result:
+            raise Exception("File processing failed")
         return jsonify({
-            "status": "success",
-            "filename": result["filename"],
-            "file_type": result["file_type"],
-            "extracted_text": result["raw_text"][:500],  # return first 500 chars
-            "categories": result["categories"],
-            "citation": source_link
-        })
+            "status": "file uploaded successfully",
+            "data": result
+        }), 200
 
     except Exception as e:
         print(f"Error processing file: {e}")

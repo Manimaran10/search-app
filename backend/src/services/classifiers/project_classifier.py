@@ -36,7 +36,7 @@ def get_all_project_embeddings():
 
 
 
-class ProjectCategorizer:
+class ProjectClassifier:
 
     def __init__(self):
         self.embedding_model = EmbeddingModel()

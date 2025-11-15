@@ -1,6 +1,6 @@
 from services.models.embedding_model import EmbeddingModel
 
-class TopicCategorizer:
+class TopicClassifier:
     
     def __init__(self):
         self.embedding_model = EmbeddingModel()
