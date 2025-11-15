@@ -3,12 +3,17 @@ from services.indexer.chunker import TextChunker
 from services.classifiers.topic_classifier import TopicClassifier
 from services.classifiers.project_classifier import ProjectClassifier
 from services.classifiers.team_classifier import TeamClassifier
+from services.db_handler.mongodb_handler import MongoDBHandler
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TextIndexer:
     
-    def __init__(self):
+    def __init__(self, mongodb_handler: MongoDBHandler = None):
         self.embedding_model = EmbeddingModel()
         self.text_chunker = TextChunker()
+        self.db_handler = mongodb_handler or MongoDBHandler()
 
     def process(self, text: str,source= None) -> dict:
         topic_classifier = TopicClassifier()
@@ -35,15 +40,39 @@ class TextIndexer:
         db_operation_response = self.persist_to_db(nodes)
         return db_operation_response
 
-    def persist_to_db(self, nodes: list):
-        for node in nodes:
-            # Here you would implement the logic to persist each node to your database
-            # For example:
-            db.insert("index", {
-                "text": node["text"],
-                "topic": node["topic"],
-                "project": node["project"],
-                "team": node["team"],
-                "embedding": node["embedding"],
-                "source": node["source"]
-            })
+    def persist_to_db(self, nodes: list) -> dict:
+        """Persist nodes to MongoDB database."""
+        try:
+            # Format nodes for database insertion
+            documents = []
+            for node in nodes:
+                document = {
+                    "text": node["text"],
+                    "topic": node["topic"],
+                    "project": node["project"],
+                    "team": node["team"],
+                    "embedding": node["embedding"],
+                    "source": node["source"],
+                    "title": node.get("title", "Untitled")
+                }
+                documents.append(document)
+            
+            # Insert documents using MongoDB handler
+            inserted_ids = self.db_handler.insert_documents(documents)
+            
+            logger.info(f"Successfully persisted {len(inserted_ids)} nodes to database")
+            
+            return {
+                "success": True,
+                "inserted_count": len(inserted_ids),
+                "inserted_ids": inserted_ids,
+                "message": f"Successfully indexed {len(inserted_ids)} document chunks"
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to persist nodes to database: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "message": "Failed to index documents"
+            }

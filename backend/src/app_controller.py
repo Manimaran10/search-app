@@ -47,7 +47,7 @@ def query():
             }), 400
         query_service = QueryService()
 
-        results = query_service.query(query_text, filters=filters, do_hybrid_search=do_hybrid_search)
+        results = query_service.query(query_text, query_filters=filters, do_hybrid_search=do_hybrid_search)
 
         return jsonify({
             "status": "success",
