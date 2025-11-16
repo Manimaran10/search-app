@@ -5,3 +5,9 @@
 # React Router
 /.react-router/
 /build/
+
+# Python
+/__pycache__/
+env/
+.venv
+*.pyc
