@@ -21,10 +21,10 @@ fi
 
 echo ""
 echo "Starting Flask backend on port 5000..."
-cd backend/src/controllers
+cd backend/src
 python app_controller.py &
 BACKEND_PID=$!
-cd ../../..
+cd ../../
 
 echo "Starting React frontend on port 3000..."
 npm start &
