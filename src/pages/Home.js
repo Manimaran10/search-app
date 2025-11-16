@@ -5,13 +5,14 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(`${API_URL}/api/search?q=${encodeURIComponent(searchQuery)}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
