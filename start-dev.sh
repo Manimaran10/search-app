@@ -21,8 +21,8 @@ fi
 
 echo ""
 echo "Starting Flask backend on port 5000..."
-cd backend/src
-python app_controller.py &
+cd backend
+python src/app_controller.py &
 BACKEND_PID=$!
 cd ../../
 
