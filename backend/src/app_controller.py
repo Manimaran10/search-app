@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import flask
 from flask import request, jsonify, render_template
 from services.file_upload.file_upload_handler import file_source_factory
