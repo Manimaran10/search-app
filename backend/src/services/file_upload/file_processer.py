@@ -1,7 +1,7 @@
 import mimetypes
-from pdf2image import convert_from_bytes
-from PIL import Image
-import pytesseract
+# from pdf2image import convert_from_bytes
+# from PIL import Image
+# import pytesseract
 import io
 from services.indexer.indexer import TextIndexer
 class FileProcesser:
@@ -49,15 +49,15 @@ class FileProcesser:
 
         return "other"
     
-    def ocr_image(self,file_bytes):
-        img = Image.open(io.BytesIO(file_bytes))
-        return pytesseract.image_to_string(img)
+    # def ocr_image(self,file_bytes):
+    #     img = Image.open(io.BytesIO(file_bytes))
+    #     return pytesseract.image_to_string(img)
 
-    def ocr_pdf(self, file_bytes) -> str:
-        pages = convert_from_bytes(file_bytes)
+    # def ocr_pdf(self, file_bytes) -> str:
+    #     pages = convert_from_bytes(file_bytes)
         
-        text = ""
-        for page in pages:
-            text += pytesseract.image_to_string(page) + "\n"
+    #     text = ""
+    #     for page in pages:
+    #         text += pytesseract.image_to_string(page) + "\n"
 
-        return text.strip()
+    #     return text.strip()
