@@ -8,34 +8,25 @@ export default function Home() {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
-    
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: searchQuery })
+      });
       const data = await response.json();
-      setSearchResults(data.results || []);
-      
-      if (data.results.length === 0) {
-        console.log("No results found for query:", searchQuery);
-      }
+      setSearchResults(data.data.results || []);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
-      // You could add a toast notification here for better UX
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    if (e.key === 'Enter') handleSearch();
   };
 
   return (
