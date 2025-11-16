@@ -8,6 +8,8 @@ export default function KnowledgeBase() {
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 
   // Mock data - replace with actual API call
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function KnowledgeBase() {
 
   const fetchUploadedFiles = async () => {
     try {
-      const response = await fetch('/api/files');
+      const response = await fetch(`${API_URL}/api/files`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -46,7 +48,7 @@ export default function KnowledgeBase() {
         formData.append('publicUrl', publicUrl);
       }
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         body: formData
       });
@@ -94,40 +96,7 @@ export default function KnowledgeBase() {
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="tab-navigation">
-          <button 
-            className={`tab ${activeTab === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all')}
-          >
-            All
-          </button>
-          <button 
-            className={`tab ${activeTab === 'yours' ? 'active' : ''}`}
-            onClick={() => setActiveTab('yours')}
-          >
-            Yours
-          </button>
-          <button 
-            className={`tab ${activeTab === 'others' ? 'active' : ''}`}
-            onClick={() => setActiveTab('others')}
-          >
-            Created By Others
-          </button>
-        </div>
-
-        {/* Search and Filter */}
-        <div className="kb-controls">
-          <div className="search-files">
-            <input type="text" placeholder="Search" className="search-input-files" />
-          </div>
-          <div className="file-actions">
-            <button className="btn-icon">Sort</button>
-            <button className="btn-icon">Filter</button>
-            <button className="btn-icon">Grid</button>
-            <button className="btn-icon">List</button>
-          </div>
-        </div>
+        
 
         {/* Upload Modal */}
         {showUploadModal && (
