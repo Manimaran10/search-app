@@ -42,7 +42,7 @@ export default function Home() {
     <div className="main-content">
       <div className="home-container">
         <div className="welcome-section">
-          <h1 className="welcome-title">Welcome !</h1>
+          <h1 className="welcome-title">Welcome to Knowledge Hub!</h1>
           <p className="welcome-subtitle">AI Search to your workforce</p>
         </div>
 
