@@ -19,11 +19,11 @@ fi
 # Check if frontend is running
 echo ""
 echo "🌐 Frontend Status:"
-frontend_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002 2>/dev/null)
+frontend_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null)
 if [[ $frontend_status -eq 200 ]]; then
-    echo "✅ Frontend: Running on http://localhost:3002"
+    echo "✅ Frontend: Running on http://localhost:3000"
 else
-    echo "❌ Frontend: Not responding on http://localhost:3002"
+    echo "❌ Frontend: Not responding on http://localhost:3000"
 fi
 
 # Test API endpoints

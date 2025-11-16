@@ -1,0 +1,32 @@
+{
+    "status":"success",
+    "results":[
+        {
+            "id":1,
+            "content":"Sample Response",
+            "categories":{
+                "topic":"example",
+                "project":"Hey Amigo",
+                "team":"SEO"
+            }
+        },
+        {
+            "id":2,
+            "content":"Another Sample Response",
+            "categories":{
+                "topic":"demo",
+                "project":"Hey Amigo",
+                "team":"Marketing"
+            }
+        },
+        {
+            "id":3,
+            "content":"Yet Another Sample Response",
+            "categories":{
+                "topic":"test",
+                "project":"Hey Amigo",
+                "team":"Development"
+            }
+        }
+    ]
+}
