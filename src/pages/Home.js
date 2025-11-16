@@ -5,6 +5,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -33,7 +34,7 @@ export default function Home() {
     <div className="main-content">
       <div className="home-container">
         <div className="welcome-section">
-          <h1 className="welcome-title">Welcome !</h1>
+          <h1 className="welcome-title">Welcome to Knowledge Hub!</h1>
           <p className="welcome-subtitle">AI Search to your workforce</p>
         </div>
 

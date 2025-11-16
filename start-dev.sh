@@ -9,13 +9,13 @@ if [ ! -d "backend/env" ]; then
     echo "Creating Python virtual environment..."
     cd backend
     python3 -m venv env
-    source env/bin/activate
+    source ./env/Scripts/activate
     pip install -r requirements.txt
     cd ..
 else
     echo "Activating Python virtual environment..."
     cd backend
-    source env/bin/activate
+    source ./env/Scripts/activate
     cd ..
 fi
 
