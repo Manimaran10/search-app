@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload Test UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button {
+            cursor: pointer;
+        }
+        .section {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+        }
+        #result {
+            white-space: pre-wrap;
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>File Upload Test UI</h2>
+
+<!-- DIRECT FILE UPLOAD -->
+<div class="section">
+    <h3>1. Upload File</h3>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">Upload File</button>
+</div>
+
+<!-- URL UPLOAD -->
+<div class="section">
+    <h3>2. Upload via URL</h3>
+    <input type="text" id="urlInput" placeholder="Enter public URL (PDF/Image/etc)" />
+    <button onclick="uploadUrl()">Upload URL</button>
+</div>
+
+<!-- GOOGLE DRIVE LINK -->
+<div class="section">
+    <h3>3. Upload via Google Drive Link</h3>
+    <input type="text" id="driveInput" placeholder="Paste Google Drive Link" />
+    <button onclick="uploadDrive()">Upload Drive Link</button>
+</div>
+
+<h3>Response</h3>
+<pre id="result"></pre>
+
+<script>
+const API_URL = "http://127.0.0.1:5000/upload"; // Change if needed
+
+// Direct File Upload
+async function uploadFile() {
+    let file = document.getElementById("fileInput").files[0];
+    if (!file) return alert("Please select a file");
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    let res = await fetch(API_URL, {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await res.json();
+    showResult(data);
+}
+
+// Upload via URL
+async function uploadUrl() {
+    let url = document.getElementById("urlInput").value.trim();
+    if (!url) return alert("Please enter a URL");
+
+    let res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+    });
+
+    let data = await res.json();
+    showResult(data);
+}
+
+// Upload Google Drive Link
+async function uploadDrive() {
+    let driveUrl = document.getElementById("driveInput").value.trim();
+    if (!driveUrl) return alert("Please enter a Google Drive URL");
+
+    let res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ drive_url: driveUrl })
+    });
+
+    let data = await res.json();
+    showResult(data);
+}
+
+function showResult(data) {
+    document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
