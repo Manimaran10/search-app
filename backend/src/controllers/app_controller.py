@@ -44,7 +44,7 @@ search_database = [
     },
     {
         "id": 3,
-        "content": "Development best practices for implementing AI agents",
+        "content": "Development best practices for implementing Knowledge hubts",
         "categories": {
             "topic": "development",
             "project": "Hey Amigo",
