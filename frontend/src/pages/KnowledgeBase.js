@@ -8,7 +8,6 @@ export default function KnowledgeBase() {
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 
   // Mock data - replace with actual API call
@@ -18,7 +17,7 @@ export default function KnowledgeBase() {
 
   const fetchUploadedFiles = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/files`);
+      const response = await fetch('/api/files');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -48,7 +47,7 @@ export default function KnowledgeBase() {
         formData.append('publicUrl', publicUrl);
       }
 
-      const response = await fetch(`${API_URL}/api/upload`, {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });

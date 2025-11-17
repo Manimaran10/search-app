@@ -5,13 +5,12 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/api/query`, {
+      const response = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ q: searchQuery })
