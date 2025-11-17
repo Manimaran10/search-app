@@ -8,27 +8,28 @@ echo "Starting Search App Development Environment..."
 if [ ! -d "backend/env" ]; then
     echo "Creating Python virtual environment..."
     cd backend
-    python3 -m venv env
-    source ./env/Scripts/activate
-    pip install -r requirements.txt
+    python3.9 -m venv env
+    source env/bin/activate
+    pip3 install -r requirements.txt
     cd ..
 else
     echo "Activating Python virtual environment..."
     cd backend
-    source ./env/Scripts/activate
+    source env/bin/activate
+    pip3 install -r requirements.txt
     cd ..
 fi
 
 echo ""
 echo "Starting Flask backend on port 5000..."
-cd backend
-python src/app_controller.py &
+cd backend/
+python src/app_controller.py  &
 BACKEND_PID=$!
 cd ../../
 
-echo "Starting React frontend on port 3000..."
-npm start &
-FRONTEND_PID=$!
+# echo "Starting React frontend on port 3000..."
+# npm start &
+# FRONTEND_PID=$!
 
 echo ""
 echo "🚀 Application started!"
