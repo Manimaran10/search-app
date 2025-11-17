@@ -23,5 +23,8 @@ python-pptx==0.6.21
 openpyxl==3.1.2
 Pillow>=10.0.0
 
+# Text Processing (optional - add back if needed)
+langchain-text-splitters>=0.3.0
+
 # For Hugging Face Spaces compatibility
 gradio>=4.0.0
