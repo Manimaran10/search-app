@@ -19,24 +19,12 @@ CORS(app,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
      allow_headers=["Content-Type", "Authorization"],
      supports_credentials=True)
-# ---------- Serve React ----------
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve_react(path):
-    file_path = os.path.join(BUILD_DIR, path)
 
-    # If the file exists, return it
-    if path != "" and os.path.exists(file_path):
-        return send_from_directory(BUILD_DIR, path)
-
-    # Otherwise return index.html
-    return send_from_directory(BUILD_DIR, "index.html")
-    
 @app.before_request
 def log_request():
     print("REQUEST:", request.method, request.path)
 
-
+# ---------- API Routes (must come before catch-all) ----------
 @app.route('/status', methods=['GET'])
 def status():
     """Endpoint to check the status of the application."""
@@ -97,7 +85,18 @@ def query():
 def index():
     return render_template("index.html")
 
+# ---------- Serve React (must be LAST - catch-all route) ----------
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    file_path = os.path.join(BUILD_DIR, path)
 
+    # If the file exists, return it
+    if path != "" and os.path.exists(file_path):
+        return send_from_directory(BUILD_DIR, path)
+
+    # Otherwise return index.html
+    return send_from_directory(BUILD_DIR, "index.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
