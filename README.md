@@ -30,6 +30,9 @@ This project is an AI-powered knowledge base and semantic search platform. It en
 - **Backend:** Python, Flask, PyMongo, Sentence Transformers
 - **Database:** MongoDB Atlas (Vector Search enabled)
 
+## Model Used
+- Sentence Transformers - all-MiniLM-L6-v2 // A lightweight model providing 384-dimensional embeddings mainly for balanced performance and speed.
+
 ## Setup
 
 1. **Clone the repository**
